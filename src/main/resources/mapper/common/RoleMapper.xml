@@ -2,4 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="club.maddm.common.mapper.RoleMapper">
 
+    <select id="selectMenuIdsByRoleIds" resultType="java.lang.String">
+        select crm.menu_id
+        from common_role cr
+            left join common_role_menu crm on cr.id = crm.role_id
+        where
+            cr.id in
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            and crm.id is not null
+        group by crm.menu_id
+    </select>
+    <select id="selectMenusByRoleIds" resultType="club.maddm.common.entity.antd.vo.AntdValVO">
+        select
+            crm.menu_id as `value`,
+            cm.title as `label`
+        from common_role cr
+            left join common_role_menu crm on cr.id = crm.role_id
+            left join common_menu cm on crm.menu_id = cm.id
+        where
+        cr.id in
+        <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+            and crm.id is not null
+            and cm.id is not null
+        group by crm.menu_id
+    </select>
 </mapper>

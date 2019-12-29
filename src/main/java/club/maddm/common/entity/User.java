@@ -5,15 +5,13 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.util.Collection;
 import java.util.Date;
-import java.io.Serializable;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.security.core.GrantedAuthority;
@@ -78,6 +76,11 @@ private static final long serialVersionUID=1L;
     private String identity;
 
     /**
+     * 是否预设
+     */
+    private String preset;
+
+    /**
      * 乐观锁
      */
     private Integer version;
@@ -126,7 +129,10 @@ private static final long serialVersionUID=1L;
     @TableField(exist = false)
     private UserInfo userInfo;
 
-
+    /**
+     * 返回角色信息
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (CollectionUtils.isEmpty(roleNames)) {

@@ -27,7 +27,7 @@ public class GenerateBoot {
 
     //需要生成的表名数组
     private static final String[] TABLENAME = {
-            "common_user_role",
+            "common_role_menu",
     };
 
     public static void main(String[] args) {

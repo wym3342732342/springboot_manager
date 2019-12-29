@@ -25,7 +25,7 @@ public class KingAuthenticationEntryPoint extends Http403ForbiddenEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException arg2) throws IOException, ServletException {
         if (log.isDebugEnabled()) {
-            log.debug("king >>>>>>>>>>>>>>>>>>>>>>>>>> 预先认证的入口点称为。拒绝访问");
+            log.debug("king >>>>>>>>>>>>>>>>>>>>>>>>>> 预先认证的入口点。拒绝访问");
         }
 
         response.setStatus(403);//设置403状态

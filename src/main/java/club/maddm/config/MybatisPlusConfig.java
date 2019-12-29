@@ -1,5 +1,6 @@
 package club.maddm.config;
 
+import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @MapperScan("club.maddm.*.mapper")
 public class MybatisPlusConfig {
-
+    /**
+     * 开启分页
+     * @return
+     */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
@@ -22,5 +26,14 @@ public class MybatisPlusConfig {
         // 设置最大单页限制数量，默认 500 条，-1 不受限制
          paginationInterceptor.setLimit(50);
         return paginationInterceptor;
+    }
+
+    /**
+     * 开启乐观锁
+     * @return
+     */
+    @Bean
+    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
+        return new OptimisticLockerInterceptor();
     }
 }

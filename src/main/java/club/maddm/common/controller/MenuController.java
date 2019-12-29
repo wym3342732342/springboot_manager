@@ -3,18 +3,14 @@ package club.maddm.common.controller;
 
 import club.maddm.common.entity.vo.ReactMenuNode;
 import club.maddm.common.service.IMenuService;
-import club.maddm.utils.UserUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.stereotype.Controller;
-
-import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +35,17 @@ public class MenuController {
         return ResponseEntity.ok(iMenuService.queryMenunodes());
     }
 
+    @ApiOperation(value = "返回菜单选择树所需数组",notes = "提示内容")
+    @GetMapping("querySelectTree")
+    public ResponseEntity<List<ReactMenuNode>> queryMenuSelectTree() {
+        ReactMenuNode reactMenuNode = new ReactMenuNode();
+        reactMenuNode.setId("0");
+        reactMenuNode.setIcon("home");
+        reactMenuNode.setTitle(" -- 天玺科技 -- ");
+        reactMenuNode.setChildren(iMenuService.queryMenunodes());
+        return ResponseEntity.ok(Collections.singletonList(reactMenuNode));
+    }
+
     @ApiOperation(value = "根据id查询菜单")
     @GetMapping("{id}")
     public ResponseEntity<ReactMenuNode> queryById(@ApiParam("菜单id") @PathVariable("id") String id) {
@@ -53,7 +60,7 @@ public class MenuController {
     }
     @ApiOperation(value = "保存或更新菜单，有id就是更新")
     @PostMapping
-    public ResponseEntity<Void> save(@ApiParam("菜单vo") @Valid ReactMenuNode reactMenuNode) {
+    public ResponseEntity<Void> save(@ApiParam("菜单vo") @Validated ReactMenuNode reactMenuNode) {
         iMenuService.save(reactMenuNode);
         return ResponseEntity.ok().build();
     }

@@ -1,9 +1,8 @@
 package club.maddm.common.exception;
 
-import club.maddm.common.entity.enums.ExceptionEnum;
+import club.maddm.common.entity.excepyionEntity.ExceptionEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Getter

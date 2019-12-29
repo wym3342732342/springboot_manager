@@ -2,8 +2,7 @@ package club.maddm.common.service.impl;
 
 import club.maddm.common.entity.User;
 import club.maddm.common.entity.UserRole;
-import club.maddm.common.entity.enums.ExceptionEnum;
-import club.maddm.common.entity.vo.UserInfo;
+import club.maddm.common.entity.excepyionEntity.ExceptionEnum;
 import club.maddm.common.exception.KingException;
 import club.maddm.common.mapper.UserMapper;
 import club.maddm.common.mapper.UserRoleMapper;

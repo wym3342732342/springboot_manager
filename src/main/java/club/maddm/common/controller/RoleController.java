@@ -2,8 +2,6 @@ package club.maddm.common.controller;
 
 
 import club.maddm.common.entity.Role;
-import club.maddm.common.entity.enums.ExceptionEnum;
-import club.maddm.common.exception.KingException;
 import club.maddm.common.service.IRoleService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -43,6 +41,8 @@ public class RoleController {
         return ResponseEntity.ok(roleService.list());//查询所有
     }
 
+
+
     /**
      * 分页查询角色
      * @param page 分页信息
@@ -56,6 +56,8 @@ public class RoleController {
                         Wrappers.<Role>lambdaQuery().like(Role::getRoleName, roleName != null ? roleName : "_")));
     }
 
+
+
     /**
      * 根据id查询
      * @param id
@@ -63,8 +65,10 @@ public class RoleController {
      */
     @GetMapping("{id}")
     public ResponseEntity<Role> queryById(@PathVariable("id") String id) {
-        return ResponseEntity.ok(roleService.getById(id));
+
+        return ResponseEntity.ok(roleService.queryRoleInfoById(id));
     }
+
 
     /**
      * 根据id删除
@@ -84,11 +88,7 @@ public class RoleController {
      */
     @PostMapping("save")
     public ResponseEntity<Void> save(Role role) {
-        if (StringUtils.isNotEmpty(role.getId())) {
-            roleService.updateById(role);//根据id更新
-        }else {
-            roleService.save(role);//保存
-        }
+        roleService.saveOrUpdate(role);
         return ResponseEntity.ok().build();
     }
 }

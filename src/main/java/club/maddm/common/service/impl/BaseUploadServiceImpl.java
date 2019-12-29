@@ -1,6 +1,6 @@
 package club.maddm.common.service.impl;
 
-import club.maddm.common.entity.enums.ExceptionEnum;
+import club.maddm.common.entity.excepyionEntity.ExceptionEnum;
 import club.maddm.common.entity.vo.ReactFileVO;
 import club.maddm.common.exception.KingException;
 import club.maddm.common.service.IBaseUploadService;

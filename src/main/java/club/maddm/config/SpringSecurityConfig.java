@@ -4,12 +4,16 @@ package club.maddm.config;
 import club.maddm.config.security.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsUtils;
 
 
@@ -29,6 +33,22 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //配置加密方式
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
+        web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
+    }
+
+    /**
+     * 允许出现双斜杠
+     * @return
+     */
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedSlash(true);
+        return firewall;
     }
 
     @Override
@@ -53,8 +73,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/common/menu/query").permitAll()//允许访问
 //                .antMatchers("/common/**").hasAuthority("系统管理员")//有admin权限
                 .antMatchers("/common/**").authenticated()
-                .anyRequest().permitAll()//允许其他接口
-//                .anyRequest().authenticated()//都必须按规则认证
+//                .anyRequest().permitAll()//允许其他接口
+                .anyRequest().authenticated()//都必须按规则认证
                 .and()
             .sessionManagement().sessionFixation().none()
         ;

@@ -1,5 +1,6 @@
-package club.maddm.common.entity.enums;
+package club.maddm.common.entity.excepyionEntity;
 
+import club.maddm.common.result.ExceptionResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,14 +25,16 @@ import org.springframework.http.HttpStatus;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public enum ExceptionEnum {
-    UNIFIED_PROCESSING(HttpStatus.INTERNAL_SERVER_ERROR.value(),"当前系统正忙！"),//500
-    FILE_IS_TOO_LARGE(HttpStatus.BAD_REQUEST.value(),"单个文件大小超过10M"),//400
-    FILE_NOT_NULL(HttpStatus.BAD_REQUEST.value(),"文件不能为空"),
-    FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"文件上传失败"),
-    DEFOULT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"系统正忙！"),
-    PASSWORD_NOT_NULL(HttpStatus.BAD_REQUEST.value(),"密码不能为空！"),
-    MENU_UPID_EROR(400,"上级设置错误！");
+public enum ExceptionEnum implements ExceptionResult.ExceptionStandard {
+    UNIFIED_PROCESSING(500,"当前系统正忙！"),//500
+    FILE_IS_TOO_LARGE(400,"单个文件大小超过10M"),//400
+    FILE_NOT_NULL(400,"文件不能为空"),
+    FILE_UPLOAD_ERROR(500,"文件上传失败"),
+    DEFOULT_ERROR(500,"系统正忙！"),
+    PASSWORD_NOT_NULL(400,"密码不能为空！"),
+    MENU_UPID_EROR(400,"上级设置错误！"),
+    ROLE_INFO_NOT_FIND(404,"角色信息没有找到"),
+    ;
     private int cod;
     private String msg;
 }

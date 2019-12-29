@@ -1,11 +1,12 @@
 package club.maddm.common.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
+import club.maddm.common.entity.antd.vo.AntdValVO;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import java.io.Serializable;
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -54,6 +55,11 @@ private static final long serialVersionUID=1L;
     private String flag;
 
     /**
+     * 是否预设
+     */
+    private String preset;
+
+    /**
      * 创建人
      */
     private String createdBy;
@@ -72,6 +78,14 @@ private static final long serialVersionUID=1L;
      * 更新时间
      */
     private Date updatedTime;
-
-
+    /**
+     * 菜单ids
+     */
+    @TableField(exist = false)
+    private List<String> menuIds;
+    /**
+     * 菜单
+     */
+    @TableField(exist = false)
+    private List<AntdValVO> menus;
 }

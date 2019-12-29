@@ -14,7 +14,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @SpringBootApplication
 public class ManageApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(ManageApplication.class);
     }
+
 }

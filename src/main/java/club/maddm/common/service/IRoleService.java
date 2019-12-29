@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRoleService extends IService<Role> {
 
+    /**
+     * 根据roleid查询角色信息
+     * @param id
+     * @return
+     */
+    public Role queryRoleInfoById(String id);
 }

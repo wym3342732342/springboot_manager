@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface IMenuService extends IService<Menu> {
     /**
-     * 查询菜单
+     * 查询菜单【权限】
      * @return
      */
     List<ReactMenuNode> queryMenunodes();

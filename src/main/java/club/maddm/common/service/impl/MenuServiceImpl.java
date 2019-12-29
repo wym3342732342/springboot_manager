@@ -1,17 +1,24 @@
 package club.maddm.common.service.impl;
 
 import club.maddm.common.entity.Menu;
-import club.maddm.common.entity.enums.ExceptionEnum;
+import club.maddm.common.entity.User;
+import club.maddm.common.entity.UserRole;
+import club.maddm.common.entity.excepyionEntity.ExceptionEnum;
 import club.maddm.common.entity.enums.MenuEnum;
 import club.maddm.common.entity.vo.ReactMenuNode;
+import club.maddm.common.entity.vo.UserInfo;
 import club.maddm.common.exception.KingException;
 import club.maddm.common.mapper.MenuMapper;
+import club.maddm.common.mapper.RoleMapper;
 import club.maddm.common.service.IMenuService;
+import club.maddm.common.service.IUserRoleService;
+import club.maddm.common.service.IUserService;
 import club.maddm.utils.ReactMenuNodeUtils;
+import club.maddm.utils.UserUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.additional.query.impl.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -19,10 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,13 +43,41 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Autowired
     private MenuMapper menuMapper;
 
+    @Autowired
+    private RoleMapper roleMapper;
+
+    @Autowired
+    private IUserRoleService userRoleService;
+
+    @Autowired
+    private IUserService userService;
+
     /**
      * 查询菜单
      * @return
      */
     @Override
     public List<ReactMenuNode> queryMenunodes() {
-        List<Menu> menus = menuMapper.selectList(null);
+        //获取用户的角色
+        UserInfo userDetail = UserUtil.getUserDetail();
+        List<UserRole> roles
+                = userRoleService.list(Wrappers.<UserRole>lambdaQuery()
+                .eq(UserRole::getUserId, userDetail.getId()));
+
+        LambdaQueryWrapper<Menu> wrapper = null;
+
+        User user = userService.queryUserById(userDetail.getId());
+
+        if (! StringUtils.equals("1", user.getPreset())) {//不是预设类型
+            List<String> menuIds =
+                    roleMapper.selectMenuIdsByRoleIds(roles.stream().map(UserRole::getRoleId).collect(Collectors.toList()));
+            wrapper = Wrappers.<Menu>lambdaQuery().in(Menu::getId,menuIds);//根据id集合查询
+        }
+
+        List<Menu> menus = menuMapper.selectList(wrapper);
+
+        //如果不是预设类型
+
         //拼装成树
         Map<String, List<ReactMenuNode>> map = ReactMenuNodeUtils.classification(menus);
         List<ReactMenuNode> menuNodeList = ReactMenuNodeUtils.assemble(map, "0");
@@ -124,7 +157,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
             selectChildIds(ids,menuNodeList);
 
-            if (ids.contains(menu.getUpId())) {
+            if (ids.contains(menu.getUpId()) || StringUtils.equals(menu.getId(), menu.getUpId())) {
                 throw new KingException(ExceptionEnum.MENU_UPID_EROR);
             }
 

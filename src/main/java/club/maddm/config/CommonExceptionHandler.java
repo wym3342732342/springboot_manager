@@ -1,13 +1,18 @@
 package club.maddm.config;
 
-import club.maddm.common.entity.enums.ExceptionEnum;
+import club.maddm.common.entity.excepyionEntity.CustomMessageExceptionEnum;
+import club.maddm.common.entity.excepyionEntity.ExceptionEnum;
 import club.maddm.common.exception.KingException;
 import club.maddm.common.result.ExceptionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 通用异常处理
@@ -26,6 +31,33 @@ public class CommonExceptionHandler {
                 .body(new ExceptionResult(e.getExceptionEnum()));//返回体
 
     }
+
+    /**
+     * 所有验证框架异常捕获处理
+     * @return
+     */
+    @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
+    public Object validationExceptionHandler(Exception exception) {
+        BindingResult bindResult = null;
+        if (exception instanceof BindException) {
+            bindResult = ((BindException) exception).getBindingResult();
+        } else if (exception instanceof MethodArgumentNotValidException) {
+            bindResult = ((MethodArgumentNotValidException) exception).getBindingResult();
+        }
+        String msg;
+        if (bindResult != null && bindResult.hasErrors()) {
+            msg = bindResult.getAllErrors().get(0).getDefaultMessage();
+            if (msg.contains("NumberFormatException")) {
+                msg = "参数类型错误！";
+            }
+        }else {
+            msg = "系统正忙！";
+        }
+        ExceptionResult exceptionResult
+                = new ExceptionResult(CustomMessageExceptionEnum.badRequest(msg));
+        return ResponseEntity.status(exceptionResult.getStatus()).body(exceptionResult);
+    }
+
 
     /**
      * 如果通用异常拦不住，使用这个拦截

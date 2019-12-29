@@ -57,10 +57,10 @@ public class CodeGenerator {
         gc.setAuthor("king");//作者
         gc.setIdType(IdType.ID_WORKER_STR);
 
-        gc.setFileOverride(true);//是否覆盖
+        gc.setFileOverride(false);//是否覆盖
 
         gc.setOpen(false);
-         gc.setSwagger2(true); //实体属性 Swagger2 注解
+        gc.setSwagger2(true); //实体属性 Swagger2 注解
         mpg.setGlobalConfig(gc);
 
         //配置数据库连接信息

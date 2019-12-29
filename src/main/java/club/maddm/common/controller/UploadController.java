@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import club.maddm.common.entity.enums.ExceptionEnum;
+import club.maddm.common.entity.excepyionEntity.ExceptionEnum;
 import club.maddm.common.entity.vo.ReactFileVO;
 import club.maddm.common.exception.KingException;
 import club.maddm.config.IpConfiguration;
